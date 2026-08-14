@@ -68,309 +68,269 @@ Streamlit Deployment
    ↓
 Loan Prediction + Model Explanation
 
-📊 Dataset
+## 📊 Dataset
 
 The project uses a loan prediction dataset containing applicant demographic, financial, and credit-related information.
 
-Dataset Information
-Original records: 614
-Records after removing missing values: 480
-Training records: 384
-Testing records: 96
-Features
-Feature	Description
-Gender	Applicant gender
-Married	Marital status
-Dependents	Number of dependents
-Education	Education level
-Self_Employed	Self-employment status
-ApplicantIncome	Applicant income
-CoapplicantIncome	Co-applicant income
-LoanAmount	Requested loan amount
-Loan_Amount_Term	Loan repayment term
-Credit_History	Credit history indicator
-Property_Area	Rural, Semiurban, or Urban
-🧹 Data Preprocessing
+### Dataset Information
 
-The following preprocessing steps were performed.
+| Metric | Value |
+|---|---:|
+| Original Records | **614** |
+| Records After Removing Missing Values | **480** |
+| Training Records | **384** |
+| Testing Records | **96** |
 
-1. Missing Value Handling
+### Features
+
+| Feature | Description |
+|---|---|
+| `Gender` | Applicant gender |
+| `Married` | Marital status |
+| `Dependents` | Number of dependents |
+| `Education` | Education level |
+| `Self_Employed` | Self-employment status |
+| `ApplicantIncome` | Applicant income |
+| `CoapplicantIncome` | Co-applicant income |
+| `LoanAmount` | Requested loan amount |
+| `Loan_Amount_Term` | Loan repayment term |
+| `Credit_History` | Credit history indicator |
+| `Property_Area` | Rural, Semiurban, or Urban |
+
+---
+
+## 🧹 Data Preprocessing
+
+The following preprocessing steps were performed before model training.
+
+### 1. Missing Value Handling
 
 Rows containing missing values were removed from the dataset.
 
-This reduced the dataset from 614 records to 480 records.
+This reduced the dataset from **614 records to 480 records**.
 
-2. Target Encoding
+### 2. Target Encoding
 
-The target variable was converted from:
+The target variable `Loan_Status` was converted into numerical values:
 
-N → 0
-Y → 1
-3. Categorical Encoding
+| Original Value | Encoded Value |
+|---|---:|
+| `N` | `0` |
+| `Y` | `1` |
 
-Categorical variables were converted into numerical representations.
+### 3. Categorical Encoding
 
-Gender:
-Male → 1
-Female → 0
+Categorical variables were converted into numerical representations suitable for machine learning.
 
+| Feature | Encoding |
+|---|---|
+| `Gender` | Male → 1, Female → 0 |
+| `Married` | Yes → 1, No → 0 |
+| `Education` | Graduate → 1, Not Graduate → 0 |
+| `Self_Employed` | Yes → 1, No → 0 |
+| `Property_Area` | Rural → 0, Semiurban → 1, Urban → 2 |
+| `Dependents` | `3+` → 4 |
 
-Married:
-Yes → 1
-No → 0
+### 4. Feature and Target Separation
 
+`Loan_ID` and `Loan_Status` were removed from the feature matrix.
 
-Education:
-Graduate → 1
-Not Graduate → 0
+The remaining applicant and financial features were used as model inputs, while `Loan_Status` was used as the target variable.
 
+---
 
-Self_Employed:
-Yes → 1
-No → 0
-
-
-Property_Area:
-Rural → 0
-Semiurban → 1
-Urban → 2
-
-For Dependents:
-
-3+ → 4
-4. Feature and Target Separation
-
-Loan_ID and Loan_Status were removed from the feature matrix.
-
-The remaining features were used as model inputs.
-
-🤖 Models Compared
+## 🤖 Models Compared
 
 Three classification algorithms were initially evaluated:
 
-Support Vector Machine (SVM)
-Random Forest
-XGBoost
-Model Comparison
-Model	Training Accuracy	Testing Accuracy
-SVM	77.86%	81.25%
-Random Forest	100.00%	79.17%
-XGBoost	100.00%	80.21%
+- **Support Vector Machine (SVM)**
+- **Random Forest**
+- **XGBoost**
 
-SVM achieved the highest testing accuracy among the three models and was selected for further cross-validation and hyperparameter tuning.
+### Model Comparison
 
-🔁 Cross-Validation
+| Model | Training Accuracy | Testing Accuracy |
+|---|---:|---:|
+| **SVM** | 77.86% | **81.25%** |
+| Random Forest | 100.00% | 79.17% |
+| XGBoost | 100.00% | 80.21% |
 
-Cross-validation was performed on the SVM model using 3 folds.
+SVM achieved the highest testing accuracy among the three models and was therefore selected for further cross-validation and hyperparameter tuning.
+
+---
+
+## 🔁 Cross-Validation
+
+After the initial model comparison, **3-fold cross-validation** was performed on the SVM model.
 
 The initial mean cross-validation accuracy was:
 
-72.66%
+### **72.66%**
 
-This step was used to evaluate the model across multiple training-validation splits rather than relying only on a single train-test split.
+Cross-validation was used to evaluate the model across multiple training-validation splits rather than relying only on a single train-test split.
 
-⚙️ Hyperparameter Tuning
+---
 
-GridSearchCV was used to identify the best SVM hyperparameters.
+## ⚙️ Hyperparameter Tuning
 
-Parameter Search
-C:
-0.01, 0.1, 1, 10, 100
+`GridSearchCV` was used to identify the best hyperparameters for the SVM model.
 
+### Parameter Search
 
-Gamma:
-scale, auto
+| Parameter | Values Tested |
+|---|---|
+| `C` | 0.01, 0.1, 1, 10, 100 |
+| `gamma` | scale, auto |
+| `kernel` | linear, rbf |
 
+### Best Parameters
 
-Kernel:
-linear, rbf
-Best Parameters
-C = 0.1
-Gamma = scale
-Kernel = linear
-Best Cross-Validation Accuracy
+| Parameter | Selected Value |
+|---|---|
+| `C` | **0.1** |
+| `gamma` | **scale** |
+| `kernel` | **linear** |
 
-78.13%
+### Best Cross-Validation Accuracy
+
+**78.13%**
 
 The tuned SVM was then evaluated on the unseen test dataset.
 
-📈 Final Model Performance
+---
 
-The tuned SVM achieved:
+## 📈 Final Model Performance
 
-Metric	Score
-Accuracy	81.25%
-Precision	80.77%
-Recall	95.45%
-F1 Score	87.50%
+The tuned SVM achieved the following results on the test dataset:
 
-The model was additionally evaluated using a confusion matrix.
+| Metric | Score |
+|---|---:|
+| **Accuracy** | **81.25%** |
+| **Precision** | **80.77%** |
+| **Recall** | **95.45%** |
+| **F1 Score** | **87.50%** |
 
-<!-- ADD SCREENSHOT HERE --> <!-- Suggested screenshot: Confusion Matrix -->
-🔎 SHAP Model Explainability
+The final model was also evaluated using a confusion matrix to examine correct and incorrect predictions for approved and non-approved applications.
 
-To make the machine learning model more interpretable, SHAP (SHapley Additive exPlanations) was used.
+---
 
-SHAP helps identify how individual features influence model predictions.
+## 🔎 SHAP Model Explainability
 
-Global Feature Importance
+To make the machine learning model more interpretable, **SHAP (SHapley Additive exPlanations)** was used.
+
+SHAP helps explain how individual features influence the model's predictions.
+
+### 🌎 Global Feature Importance
 
 The SHAP analysis identified the following as the most influential features:
 
-Credit_History
-ApplicantIncome
-Property_Area
+1. **Credit_History**
+2. **ApplicantIncome**
+3. **Property_Area**
 
-The SHAP summary plot provides an overall view of how feature values influence the model output.
+The SHAP summary plot provides an overall view of feature importance and the direction of feature influence across predictions.
 
-<!-- ADD SCREENSHOT HERE --> <!-- Suggested screenshot: SHAP Summary Plot from the Jupyter Notebook -->
-Individual Prediction Explainability
+### 📸 SHAP Summary Plot
+
+**Insert your SHAP summary plot screenshot here.**
+
+> Recommended file: `images/shap_summary_plot.png`
+
+![SHAP Summary Plot](images/shap_summary_plot.png)
+
+### 👤 Individual Prediction Explainability
 
 The Streamlit application also generates a SHAP waterfall plot for an individual applicant.
 
-This answers:
+This answers an important question:
 
-Why did the model make this particular prediction?
+> **Why did the model make this particular prediction?**
 
-Features with positive SHAP contributions push the model output higher, while negative contributions push it lower.
+Positive SHAP contributions push the model output higher, while negative contributions push it lower. Larger SHAP values indicate stronger influence on the individual prediction.
 
-<!-- ADD SCREENSHOT HERE --> <!-- Suggested screenshot: SHAP Model Explainability section from Streamlit -->
-🖥️ Streamlit Application
+### 📸 SHAP Individual Prediction
 
-The final tuned SVM model was saved using Joblib and integrated into a Streamlit application.
+**Insert your Streamlit SHAP waterfall screenshot here.**
+
+> Recommended file: `images/shap_waterfall.png`
+
+![SHAP Individual Explanation](images/shap_waterfall.png)
+
+---
+
+## 🖥️ Streamlit Application
+
+The final tuned SVM model was saved using **Joblib** and integrated into an interactive Streamlit application.
 
 The application allows users to enter:
 
-Applicant information
-Financial information
-Credit history
-Property area
-Loan details
+- Applicant information
+- Financial information
+- Credit history
+- Property area
+- Loan details
 
-The system then provides:
+The system then generates a loan prediction and provides an explanation of the model's decision using SHAP.
 
-1. Loan Prediction
-✓ Loan Likely to be Approved
+### 1. Loan Prediction
+
+The application provides one of two outcomes:
+
+> **✓ Loan Likely to be Approved**
 
 or
 
-✕ Loan Likely to be Not Approved
-<!-- ADD SCREENSHOT HERE --> <!-- Suggested screenshot: Main Streamlit interface + prediction result -->
-2. Model Information
+> **✕ Loan Likely to be Not Approved**
 
-The application displays the final model and its test accuracy.
+### 2. Model Information
 
-3. SHAP Model Explainability
+The application displays information about the final tuned SVM model, including its test accuracy.
 
-The application generates an individual SHAP explanation showing how the applicant's features contributed to the prediction.
+### 3. SHAP Model Explainability
 
-🧠 Deployment Architecture
+After generating a prediction, the application displays an individual SHAP explanation showing how the applicant's features contributed to the prediction.
+
+### 📸 Streamlit Interface
+
+**Insert your main Streamlit application screenshot here.**
+
+> Recommended file: `images/streamlit_interface.png`
+
+![Streamlit Application Interface](images/streamlit_interface.png)
+
+### 📸 Prediction Result
+
+**Insert a screenshot showing the prediction result here.**
+
+> Recommended file: `images/prediction_result.png`
+
+![Loan Prediction Result](images/prediction_result.png)
+
+---
+
+## 🧠 Deployment Architecture
+
+The deployed system follows this workflow:
+
+```text
 User
- ↓
+  ↓
 Streamlit Interface
- ↓
+  ↓
 Applicant Inputs
- ↓
+  ↓
 Categorical Encoding
- ↓
+  ↓
 Feature Arrangement
- ↓
+  ↓
 Saved Tuned SVM Model
- ↓
-Prediction
- ↓
+  ↓
+Loan Prediction
+  ↓
 SHAP Explanation
- ↓
-Result + Explanation
+  ↓
+Prediction + Model Explanation
 
-The trained model is stored as:
 
-loan_svm_model.pkl
 
-The SHAP background dataset is stored as:
 
-loan_shap_background.pkl
-📁 Project Structure
-loan-prediction-svm/
-│
-├── app.py
-│
-├── Loan_Prediction_System.ipynb
-│
-├── Loan Prediction Dataset.csv
-│
-├── loan_svm_model.pkl
-│
-├── loan_shap_background.pkl
-│
-├── .gitignore
-│
-└── README.md
-🛠️ Technologies Used
-Programming Language
-Python
-Data Processing
-Pandas
-NumPy
-Data Visualization
-Matplotlib
-Seaborn
-Machine Learning
-Scikit-learn
-SVM
-Random Forest
-XGBoost
-Model Explainability
-SHAP
-Deployment
-Streamlit
-Model Serialization
-Joblib
-▶️ How to Run the Project
-1. Clone the repository
-git clone https://github.com/snehaseveriya23/loan-prediction-svm.git
-2. Navigate to the project directory
-cd loan-prediction-svm
-3. Install required libraries
-pip install pandas numpy matplotlib seaborn scikit-learn xgboost shap streamlit joblib
-4. Run the Streamlit application
-streamlit run app.py
-
-The application will open in your browser.
-
-📌 Key Highlights
-Compared SVM, Random Forest, and XGBoost
-Selected SVM based on test performance
-Performed cross-validation
-Performed GridSearchCV hyperparameter tuning
-Achieved 81.25% test accuracy
-Achieved 95.45% recall
-Used SHAP for model explainability
-Built an interactive Streamlit application
-Integrated individual prediction explanations using SHAP
-🚀 Future Improvements
-
-Potential future improvements include:
-
-What-if analysis for applicant inputs
-Probability/risk estimation
-Fairness and bias analysis
-REST API integration
-Model monitoring
-Improved preprocessing pipeline
-Cloud deployment
-Automated model retraining
-⚠️ Disclaimer
-
-This project is developed for educational and demonstration purposes.
-
-The predictions generated by the model should not be considered guaranteed banking or financial decisions.
-
-👩‍💻 Author
-
-Sneha Severiya
-
-B.Tech Data Science Student
-
-GitHub:
-https://github.com/snehaseveriya23
