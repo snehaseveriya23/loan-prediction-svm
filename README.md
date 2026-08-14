@@ -235,9 +235,8 @@ The SHAP summary plot provides an overall view of feature importance and the dir
 
 ### 📸 SHAP Summary Plot
 
-**Insert your SHAP summary plot screenshot here.**
 
-![SHAP Summary Plot](images/shap_summary_plot.png)
+![SHAP Summary Plot](shap_summary_plot.png)
 
 ### 👤 Individual Prediction Explainability
 
@@ -251,9 +250,8 @@ Positive SHAP contributions push the model output higher, while negative contrib
 
 ### 📸 SHAP Individual Prediction
 
-**Insert your Streamlit SHAP waterfall screenshot here.**
 
-![SHAP Individual Explanation](images/shap_waterfall.png)
+![SHAP Individual Explanation](shap_waterfall.png)
 
 ---
 
@@ -291,16 +289,13 @@ After generating a prediction, the application displays an individual SHAP expla
 
 ### 📸 Streamlit Interface
 
-**Insert your main Streamlit application screenshot here.**
 
-![Streamlit Application Interface](images/streamlit_interface.png)
+![Streamlit Application Interface](streamlit_interface.png)
 
 ### 📸 Prediction Result
 
-**Insert a screenshot showing the prediction result here.**
 
-![Loan Prediction Result](images/prediction_result.png)
-
+![Loan Prediction Result](prediction_result.png)
 ---
 
 ## 🧠 Deployment Architecture
